@@ -24,11 +24,11 @@ function App() {
 
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
-      formData.append(`images[${i}]`, files[i], files.name);
+      formData.append(`images[]`, files[i], files.name);
     }
 
     formData.append("json", JSON.stringify(imagesMock));
-    const res = await axios.post("/aaa", formData, {
+    const res = await axios.post("http://127.0.0.1:5000/images", formData, {
       headers: {
         "content-type": "multipart/form-data",
       },
