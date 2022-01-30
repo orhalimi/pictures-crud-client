@@ -1,18 +1,62 @@
-import React from 'react'
-import './App.css'
+import React, { useState } from "react";
+import axios from "axios";
+import "./App.css";
+
+const imagesMock = [
+  {
+    name: "small cute cat",
+    tags: ["cat", "cute", "small"],
+    owner: "orhalimi",
+  },
+  {
+    name: "big less cute cat",
+    tags: ["cat", "not cute", "big"],
+    owner: "orhalimi",
+  },
+];
 
 function App() {
+  const [files, setFiles] = useState([]);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    console.log(files);
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append(`images[${i}]`, files[i], files.name);
+    }
+
+    formData.append("json", JSON.stringify(imagesMock));
+    const res = await axios.post("/aaa", formData, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+  }
+
+  async function handleChange(event) {
+    console.log(event);
+    setFiles(event.target.files);
+  }
+
   return (
     <div className="App">
-        <h1>Working with Vite</h1>
-        <p>Hello There! This was such a first fun experience creating a React app using Vite.
-          The lightning-fast starting of the dev server is such an amazing experience while using this tool compared to the normal<b>npx create-react-app (app-name) way.</b>
-          Now I will run the **"npm run serve"** command to experience the instant HMR experience that Vite provides.
-        </p>
-
-        <h1>Happy Coding!</h1>
-   </div>
-  )
+      <form onSubmit={handleSubmit}>
+        <label for="files">Select files:</label>
+        <input
+          type="file"
+          id="files"
+          name="files"
+          multiple
+          onChange={handleChange}
+        />
+        <br />
+        <br />
+        <input type="submit" />
+      </form>
+    </div>
+  );
 }
 
-export default App
+export default App;
